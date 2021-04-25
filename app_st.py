@@ -102,13 +102,7 @@ def update_figure(picks, curve, active_well):
     print('***\n***\n***', picks_selected)
     
     # regenerate figure with the new horizontal line
-    fig = px.line(x=w.data[curve], y=w.data[curve].basis, labels={'x': curve, 'y': 'MD'})
-    
-    fig.layout = {
-        'uirevision': curve}  # https://community.plotly.com/t/preserving-ui-state-like-zoom-in-dcc-graph-with-uirevision-with-dash/15793
-    fig.update_yaxes(autorange="reversed")
-    fig.layout.xaxis.fixedrange = True
-    fig.layout.template = 'plotly_white'
+    fig = helper.make_log_plot(df)
     helper.update_picks_on_plot(fig, picks_selected)
 
     return fig
@@ -136,10 +130,7 @@ curve_dropdown_options = [{'label': k, 'value': k} for k in sorted(curve_list)] 
 curve = st.sidebar.selectbox("Well Names", [item['value'] for item in curve_dropdown_options])
 
 # draw the initial plot
-fig_well_1 = px.line(x=df[curve], y=df.index, labels = {'x':curve, 'y': df.index.name}) ##polot data and axis lables
-fig_well_1.update_yaxes(autorange="reversed") ## flips the y-axis to increase down assuming depth increases
-fig_well_1.layout.xaxis.fixedrange = True ##forces the x axis to a fixed range based on the curve data
-fig_well_1.layout.template = 'plotly_white' ##template for the plotly figure
+fig_well_1 = helper.make_log_plot(df)
 
 surface_picks_df = get_tops_df(p)
 
